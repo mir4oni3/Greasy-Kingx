@@ -1,29 +1,30 @@
 import pygame
-import config
-import entities
-from sys import exit
-
 pygame.init()
+import config
+import utils
+import iteration
 
-screen = pygame.display.set_mode((config.screen_width, config.screen_height), pygame.FULLSCREEN | pygame.SCALED)
-pygame.display.set_caption("Greasy Kingx")
-pygame.display.set_icon(pygame.image.load(config.game_icon).convert_alpha())
+screen = utils.init_screen()
+hero = utils.init_hero()
 clock = pygame.time.Clock()
-
 background = pygame.Surface((config.screen_width, config.screen_height))
 
-hero = pygame.sprite.GroupSingle()
-hero.add(entities.GreasyKiller((config.screen_width / 2, config.screen_height / 2)))
+rects = {}
+in_menu = True
+currentStatus = utils.Status.in_menu
 
 while True: #game loop
     for event in pygame.event.get():
-        if event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_ESCAPE:
-                pygame.quit()
-                exit()
+       currentStatus = utils.handle_event(event, currentStatus, rects)
 
     screen.blit(background, (0, 0))
-    hero.draw(screen)
+    
+    if currentStatus is utils.Status.in_menu:
+        utils.show_menu(screen, rects)
+    elif currentStatus is utils.Status.in_game:
+        iteration.process_game_iteration(hero, screen)
+    elif currentStatus is utils.Status.paused:
+        pass#TBI
 
     pygame.display.update()
     clock.tick(config.framerate)
