@@ -1,5 +1,7 @@
 import pygame
 import config
+import utils
+import menu
 
 def get_mov_vector(keys):
     movement_vector = [0, 0]
@@ -29,8 +31,12 @@ def move(hero, keys):
     hero.sprite.rect.top = max(hero.sprite.rect.top, 0)
     hero.sprite.rect.bottom = min(hero.sprite.rect.bottom, config.screen_height)
 
-def process_game_iteration(hero, screen):
+def process_game_iteration(hero, screen, current_status):
     keys = pygame.key.get_pressed()
-    move(hero, keys)
     hero.draw(screen)
+    if current_status == utils.Status.resuming:
+        menu.play_resume_animation(screen)
+        current_status = utils.Status.in_game
+    move(hero, keys)
+    return current_status
 

@@ -3,6 +3,8 @@ pygame.init()
 import config
 import utils
 import iteration
+import event_handler
+import menu
 
 screen = utils.init_screen()
 hero = utils.init_hero()
@@ -11,20 +13,20 @@ background = pygame.Surface((config.screen_width, config.screen_height))
 
 rects = {}
 in_menu = True
-currentStatus = utils.Status.in_menu
+current_status = utils.Status.in_menu
 
 while True: #game loop
     for event in pygame.event.get():
-       currentStatus = utils.handle_event(event, currentStatus, rects)
+       current_status = event_handler.handle_event(event, current_status, rects)
 
-    screen.blit(background, (0, 0))
+    if current_status is not utils.Status.paused:
+        screen.blit(background, (0, 0))
     
-    if currentStatus is utils.Status.in_menu:
-        utils.show_menu(screen, rects)
-    elif currentStatus is utils.Status.in_game:
-        iteration.process_game_iteration(hero, screen)
-    elif currentStatus is utils.Status.paused:
-        pass#TBI
+    if current_status is utils.Status.in_menu or current_status is utils.Status.paused:
+        current_status = menu.show_menu(screen, rects, current_status)
 
+    elif current_status is utils.Status.in_game or current_status is utils.Status.resuming:
+        current_status = iteration.process_game_iteration(hero, screen, current_status)
+        
     pygame.display.update()
     clock.tick(config.framerate)
