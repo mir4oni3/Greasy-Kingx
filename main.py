@@ -12,7 +12,6 @@ clock = pygame.time.Clock()
 background = pygame.Surface((config.screen_width, config.screen_height))
 
 rects = {}
-in_menu = True
 current_status = utils.Status.in_menu
 
 while True: #game loop
@@ -27,6 +26,6 @@ while True: #game loop
 
     elif current_status is utils.Status.in_game or current_status is utils.Status.resuming:
         current_status = iteration.process_game_iteration(hero, screen, current_status)
-        
+    
     pygame.display.update()
     clock.tick(config.framerate)

@@ -27,4 +27,4 @@ resume_background_color = (156, 40, 201)
 resume_font = pygame.font.Font(None, font_size)
 resume_text_color = (255, 255, 255)
 
-pause_menu_color =(97, 102, 201, 125)
+dagger_icon = 'Greasy Kingx/Dagger.PNG'
