@@ -1,30 +1,33 @@
 import pygame
 pygame.init()
-screen_width, screen_height = 1920, 1080
-framerate = 60
+SCREEN_WIDTH, SCREEN_HEIGHT = 1920, 1080
+FRAMERATE = 60
 
-game_icon = 'Greasy Kingx/gameIcon.PNG'
-greasy_killer_icon = 'Greasy Kingx/greasyKillerIcon.PNG'
-slickback_scoundrel_icon = 'Greasy Kingx/SlickBackScoundrel.PNG'
+GAME_ICON = 'Greasy Kingx/gameIcon.PNG'
+GREASY_KILLER_ICON = 'Greasy Kingx/greasyKillerIcon.PNG'
+SLICKBACK_SCOUNDREL_ICON = 'Greasy Kingx/SlickBackScoundrel.PNG'
 
-font_size = screen_width // 40
+FONT_SIZE = SCREEN_WIDTH // 40
 
-text_font = pygame.font.Font(None, font_size)
+TEXT_FONT = pygame.font.Font(None, FONT_SIZE)
 
-hero_movement_speed = 10
+HERO_MOVEMENT_SPEED = 10
 
-main_menu_color = (97, 102, 201)
-main_menu_border_radius = 40
+MAIN_MENU_COLOR = (97, 102, 201)
+MAIN_MENU_BORDER_RADIUS = 40
 
-main_menu_button_color = (30, 34, 115)
-main_menu_button_border_radius = 10
+MAIN_MENU_BUTTON_COLOR = (30, 34, 115)
+MAIN_MENU_BUTTON_BORDER_RADIUS = 10
 
-main_menu_text_color = (255, 255, 255)
+MAIN_MENU_TEXT_COLOR = (255, 255, 255)
 
-game_tutorial = 'How to play:\nW,A,S,D - Movement\nMouse click - Shoot at cursor direction\nPress P at any time to pause\n'
+GAME_TUTORIAL = 'How to play:\nW,A,S,D - Movement\nMouse click - Shoot at cursor direction\nPress P at any time to pause\n'
 
-resume_background_color = (156, 40, 201)
-resume_font = pygame.font.Font(None, font_size)
-resume_text_color = (255, 255, 255)
+RESUME_BACKGROUND_COLOR = (156, 40, 201)
+RESUME_FONT = pygame.font.Font(None, FONT_SIZE)
+RESUME_TEXT_COLOR = (255, 255, 255)
 
-dagger_icon = 'Greasy Kingx/Dagger.PNG'
+DAGGER_ICON = 'Greasy Kingx/Dagger.PNG'
+DAGGER_SIZE = (200,20)
+DAGGER_SPAN = 90
+DAGGER_SPEED = 1

@@ -7,17 +7,18 @@ class Entity(pygame.sprite.Sprite):
         super().__init__()
         self.rect = self.image.get_rect(center = coords)
         self.coords = coords
+        self.is_attacking = False
 
 class GreasyKiller(Entity):
     def __init__(self, coords):
-        self.image = pygame.image.load(config.greasy_killer_icon).convert_alpha()
+        self.image = pygame.image.load(config.GREASY_KILLER_ICON).convert_alpha()
         self._original_image = self.image.copy()
         super().__init__(coords)
         self.current_item = 0
         self.items = []
 
     def use_item(self):
-        self.items[self.current_item].use()
+        self.items[self.current_item].sprite.use()
 
     def select_item(self, index):
         self.current_item = index if index >= 0 and index <= 9 else self.current_item 
@@ -32,22 +33,24 @@ class GreasyKiller(Entity):
 
         #fix out of bounds
         hero_rect.left = max(hero_rect.left, 0)
-        hero_rect.right = min(hero_rect.right, config.screen_width)
+        hero_rect.right = min(hero_rect.right, config.SCREEN_WIDTH)
         hero_rect.top = max(hero_rect.top, 0)
-        hero_rect.bottom = min(hero_rect.bottom, config.screen_height)
+        hero_rect.bottom = min(hero_rect.bottom, config.SCREEN_HEIGHT)
 
         #update coords
         self.coords = hero_rect.center
 
     def aim(self, active_item):
-        #rotate
-        utils.rotate(self, self, pygame.mouse.get_pos())
-        utils.rotate(self, active_item.sprite, pygame.mouse.get_pos())
-
         #translate
-        translate_amount = max(active_item.sprite.width, active_item.sprite.height) / 2
-        active_item.sprite.translate(self.coords, pygame.mouse.get_pos(), translate_amount)
-    
+        translate_amount = (active_item.sprite.width ** 2 + active_item.sprite.height ** 2) ** 0.5 / 2
+        utils.translate(active_item.sprite, self.coords, self.coords, pygame.mouse.get_pos(), translate_amount)
+
+        #rotate
+        additional_angle = active_item.sprite.slash()
+        utils.rotate(self, self.coords, pygame.mouse.get_pos(), 0)
+        utils.rotate(active_item.sprite, self.coords, pygame.mouse.get_pos(), additional_angle)
+        active_item.sprite.coords = utils.rotate_around_point(active_item.sprite.coords, self.coords, -additional_angle)
+        active_item.sprite.rect = active_item.sprite.image.get_rect(center = active_item.sprite.coords)
 
 
 class Monster(Entity):
@@ -56,5 +59,5 @@ class Monster(Entity):
 
 class SlickbackScoundrel(Monster):
     def __init__(self, coords):
-        self.image = pygame.image.load(config.slickback_scoundrel_icon).convert_alpha()
+        self.image = pygame.image.load(config.SLICKBACK_SCOUNDREL_ICON).convert_alpha()
         super().__init__(coords)
