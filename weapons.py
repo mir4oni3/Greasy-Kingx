@@ -28,24 +28,6 @@ class Weapon(pygame.sprite.Sprite):
     def height(self):
         return abs(self.rect.top - self.rect.bottom)
     
-    def translate(self, from_point, vector_start, vector_end, pixel_count):
-        '''Translate sprite in the direction point1->point2 by pixel_count'''
-        dir_x = vector_end[0] - vector_start[0]
-        dir_y = vector_end[1] - vector_start[1]
-
-        #normalize vector
-        vector_length = (dir_x ** 2 + dir_y ** 2) ** 0.5
-        dir_x /= vector_length
-        dir_y /= vector_length
-
-        #scale vector to target size
-        dir_x *= pixel_count
-        dir_y *= pixel_count
-
-        #update coords
-        self.coords = (from_point[0] + dir_x, from_point[1] + dir_y)
-        self.rect = self.image.get_rect(center = self.coords)
-
     def use(self):
         if self.weapon_type is WeaponType.melee:
             self.owner.is_attacking = True
