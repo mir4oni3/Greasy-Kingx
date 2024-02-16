@@ -1,17 +1,20 @@
 import pygame
 pygame.init()
+
 SCREEN_WIDTH, SCREEN_HEIGHT = 1920, 1080
 FRAMERATE = 60
 
-GAME_ICON = 'Greasy Kingx/gameIcon.PNG'
-GREASY_KILLER_ICON = 'Greasy Kingx/greasyKillerIcon.PNG'
+GAME_ICON = 'Greasy Kingx/GameIcon.PNG'
+GREASY_KILLER_ICON = 'Greasy Kingx/GreasyKiller.PNG'
 SLICKBACK_SCOUNDREL_ICON = 'Greasy Kingx/SlickBackScoundrel.PNG'
 
 FONT_SIZE = SCREEN_WIDTH // 40
 
 TEXT_FONT = pygame.font.Font(None, FONT_SIZE)
 
-HERO_MOVEMENT_SPEED = 10
+ENTITY_SIZE = (max(0.052 * SCREEN_WIDTH, 0.092 * SCREEN_HEIGHT), max(0.052 * SCREEN_WIDTH, 0.092 * SCREEN_HEIGHT))
+
+HERO_MOVEMENT_SPEED = 0.005 * SCREEN_WIDTH
 
 MAIN_MENU_COLOR = (97, 102, 201)
 MAIN_MENU_BORDER_RADIUS = 40
@@ -21,13 +24,38 @@ MAIN_MENU_BUTTON_BORDER_RADIUS = 10
 
 MAIN_MENU_TEXT_COLOR = (255, 255, 255)
 
-GAME_TUTORIAL = 'How to play:\nW,A,S,D - Movement\nMouse click - Shoot at cursor direction\nPress P at any time to pause\n'
+GAME_TUTORIAL = 'How to play:\n\nW,A,S,D - Movement\n\nMouse click\Spacebar - Shoot\slash at\ncursor direction\n\nP - pause\n\n'
 
 RESUME_BACKGROUND_COLOR = (156, 40, 201)
 RESUME_FONT = pygame.font.Font(None, FONT_SIZE)
 RESUME_TEXT_COLOR = (255, 255, 255)
+RESUME_DURATION = 3
+
+SHOP_COLOR = (97, 102, 201)
+SHOP_BORDER_RADIUS = 40
+
+SHOP_TEXT_COLOR = (255, 255, 255)
+
+SHOP_BUTTON_COLOR = (30, 34, 115)
+SHOP_BUTTON_BORDER_RADIUS = 10
 
 DAGGER_ICON = 'Greasy Kingx/Dagger.PNG'
-DAGGER_SIZE = (200,20)
+DAGGER_SIZE = (0.104 * SCREEN_WIDTH, 0.018 * SCREEN_HEIGHT)
 DAGGER_SPAN = 90
 DAGGER_SPEED = 1
+DAGGER_DAMAGE = 20
+
+BOW_ICON = 'Greasy Kingx/Bow.PNG'
+BOW_SIZE = (0.028 * SCREEN_WIDTH, 0.092 * SCREEN_HEIGHT)
+BOW_PROJECTILE_SPEED = 1
+BOW_PROJECTILE_SIZE = (0.016 * SCREEN_WIDTH, 0.009 * SCREEN_HEIGHT)
+BOW_PROJECTILE_DAMAGE = 20
+BOW_PROJECTILE_ICON = 'Greasy Kingx/BowProjectile.PNG'
+
+STARTING_ITEMS = ['dagger']
+
+#item : price
+SHOP_ITEMS = {'dagger' : 10, 'bow' : 300, 'healing_potion' : 50}
+
+UPGRADES = {'dagger_size' : 30, 'dagger_speed' : 40, 'dagger_span' : 30, 'dagger_damage' : 40,
+            'bow_projectile_speed' : 100, 'bow_projectile_damage' : 100}

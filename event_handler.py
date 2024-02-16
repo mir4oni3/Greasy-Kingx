@@ -1,7 +1,7 @@
 import utils
 import pygame
 
-def handle_button_press(event, current_status, objects):
+def handle_mouse_input(event, current_status, objects):
     if event.button != 1:
         return current_status
     #use current item
@@ -17,6 +17,9 @@ def handle_button_press(event, current_status, objects):
     elif current_status in (utils.Status.in_menu, utils.Status.paused) and objects['quit_button'].collidepoint(event.pos):
         pygame.quit()
         exit()
+    #close shop button pressed in shop
+    elif current_status is utils.Status.in_shop and objects['close_shop'].collidepoint(event.pos):
+        return utils.Status.resuming
     return current_status
 
 def handle_keyboard_input(event, current_status, objects):
@@ -29,12 +32,22 @@ def handle_keyboard_input(event, current_status, objects):
         current_status = utils.Status.paused
     elif event.key == pygame.K_p and current_status is utils.Status.paused:
         current_status = utils.Status.resuming
+    elif event.key == pygame.K_SPACE and current_status is utils.Status.in_game:
+        objects['hero'].use_item()
+
+    #FOR TESTING
+    elif event.key == pygame.K_o and current_status is utils.Status.in_game:
+        current_status = utils.Status.in_shop
+    elif event.key == pygame.K_o and current_status is utils.Status.in_shop:
+        current_status = utils.Status.resuming
+    #^^REMOVE LATER
+        
     return current_status
 
 def handle_event(event, current_status, objects):
     if event.type == pygame.KEYDOWN:
         current_status = handle_keyboard_input(event, current_status, objects)
     if event.type == pygame.MOUSEBUTTONDOWN:
-        current_status = handle_button_press(event, current_status, objects)
+        current_status = handle_mouse_input(event, current_status, objects)
     
     return current_status

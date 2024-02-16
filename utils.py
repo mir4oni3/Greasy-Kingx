@@ -10,14 +10,22 @@ class Status(Enum):
      in_menu = 2
      resuming = 3
      paused = 4
+     in_shop = 5
+
+def init_starting_items(hero):
+    for item_name in config.STARTING_ITEMS:
+        if item_name is 'dagger':
+            item = weapons.Dagger(hero)
+        if not item:
+            continue
+        item_group = pygame.sprite.GroupSingle()
+        item_group.add(item)
+        hero.items.append(item_group)
 
 def init_hero():
     hero_group = pygame.sprite.GroupSingle()
     hero = entities.GreasyKiller((config.SCREEN_WIDTH / 2, config.SCREEN_HEIGHT / 2))
-    dagger_group = pygame.sprite.GroupSingle()
-    dagger = weapons.Dagger(hero)
-    dagger_group.add(dagger)
-    hero.items.append(dagger_group)
+    init_starting_items(hero)
     hero_group.add(hero)
     return hero_group
 
@@ -27,13 +35,16 @@ def init_screen():
     pygame.display.set_icon(pygame.image.load(config.GAME_ICON).convert_alpha())
     return screen
 
-def render_multi_line(screen, text, x, y, FONT_SIZE):
+def render_multi_line(screen, text, x, y, font_size):
     lines = text.splitlines()
     for i, line in enumerate(lines):
         current_line = config.TEXT_FONT.render(line, True, config.MAIN_MENU_TEXT_COLOR) 
-        screen.blit(current_line, (x, y + FONT_SIZE*i))
+        screen.blit(current_line, (x, y + font_size*i))
 
 def rotate_around_point(target, reference, angle):
+    if angle == 0:
+        return target
+    
     angle_rad = (math.pi / 180) * angle
     new_x = math.cos(angle_rad) * (target[0] - reference[0]) - math.sin(angle_rad) * (target[1] - reference[1]) + reference[0]
     new_y = math.sin(angle_rad) * (target[0] - reference[0]) + math.cos(angle_rad) * (target[1] - reference[1]) + reference[1]
