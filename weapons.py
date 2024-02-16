@@ -38,7 +38,6 @@ class Weapon(Item, abc.ABC):
     def height(self):
         return abs(self.rect.top - self.rect.bottom)
     
-<<<<<<< HEAD
 
     def use_item(self):
         self.owner.is_using_item = True
@@ -51,8 +50,6 @@ class MeleeWeapon(Weapon, abc.ABC):
         self.span = span
 
     #slash
-=======
->>>>>>> 2ebf1cc168a15cb6abb82fa73fc750683ae6b936
     def use(self):
         if not self.owner.is_using_item:
            return 0
@@ -125,11 +122,7 @@ class Bow(RangedWeapon):
 class Dagger(MeleeWeapon):
     def __init__(self, owner):
         self.image = pygame.image.load(config.DAGGER_ICON).convert_alpha()
-<<<<<<< HEAD
         pygame.Surface.set_colorkey(self.image, (255, 255, 255))
     
         price = -1 if 'dagger' in config.STARTING_ITEMS else config.SHOP_ITEMS['dagger']
         super().__init__(owner, price, config.DAGGER_DAMAGE, config.DAGGER_SIZE, config.DAGGER_SPAN, config.DAGGER_SPEED)
-=======
-        super().__init__(owner, WeaponType.melee)
->>>>>>> 2ebf1cc168a15cb6abb82fa73fc750683ae6b936
