@@ -13,12 +13,15 @@ class Status(Enum):
      in_shop = 5
      dead = 6
      new_game = 7
+     shop_request = 8
 
 def init_starting_items(hero):
     for item_name in config.STARTING_ITEMS:
         item = None
         if item_name == 'dagger':
             item = weapons.Dagger(hero)
+        if item_name == 'bow':
+            item = weapons.Bow(hero)
         if not item:
             continue
         hero.items.append(item)

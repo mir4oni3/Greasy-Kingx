@@ -10,7 +10,7 @@ class Entity(pygame.sprite.Sprite):
         self.rect = self.image.get_rect(center = coords)
         self._original_image = self.image.copy()
         self.coords = coords
-        self.is_using_item = False
+        self.is_using_item = False if is_friendly else True
         self.is_friendly = is_friendly
         self.movement_speed = movement_speed
         self.health = health
@@ -104,7 +104,6 @@ class SlickbackScoundrel(Monster):
         speed = config.SLICKBACK_SCOUNDREL_MOVEMENT_SPEED
         damage = config.SLICKBACK_SCOUNDREL_BODY_DAMAGE
         health = config.SLICKBACK_SCOUNDREL_HEALTH
-        max_health = config.SLICKBACK_SCOUNDREL_HEALTH
         super().__init__(coords, speed, 1, None, damage, health)
 
 

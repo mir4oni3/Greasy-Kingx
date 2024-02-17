@@ -46,10 +46,9 @@ class MeleeWeapon(Weapon, abc.ABC):
     def use(self, direction):
         if not self.owner.is_using_item:
            return 0
-        
         if self.attack_progress > self.span:
             self.attack_progress = 1
-            self.owner.is_using_item = False
+            self.owner.is_using_item = False if self.owner.is_friendly else True
             return 0
         
         self.attack_progress += self.speed
@@ -57,24 +56,27 @@ class MeleeWeapon(Weapon, abc.ABC):
     
 
 class Projectile(pygame.sprite.Sprite, abc.ABC):
-    def __init__(self, is_friendly, damage, direction, speed, coords):
+    def __init__(self, damage, direction, speed, owner):
         super().__init__()
-        self.is_friendly = is_friendly #did greasy killer launch this projectile
         self.damage = damage
         self.direction = direction
         self.speed = speed
-        self.coords = coords
+        self.owner = owner
+        self.coords = owner.coords
+        self._original_image = self.image.copy()
 
         pygame.Surface.set_colorkey(self.image, (255, 255, 255))
         self.rect = self.image.get_rect(center = self.coords)
-
+    
 
 class BowProjectile(Projectile):
-    def __init__(self, is_friendly, direction):
-        self.image = pygame.image.load(config.BOW_PROJECTILE_ICON).convert_alpha()
+    def __init__(self, direction, owner):
+        icon = config.BOW_PROJECTILE_ICON if owner.is_friendly else config.ENEMY_BOW_PROJECTILE_ICON
+        self.image = pygame.image.load(icon).convert_alpha()
         self.image = pygame.transform.scale(self.image, config.BOW_PROJECTILE_SIZE)
-        super().__init__(is_friendly, config.BOW_PROJECTILE_DAMAGE, direction,
-                         config.BOW_PROJECTILE_SPEED, self.owner.rect.center)
+        pygame.Surface.set_colorkey(self.image, (255, 255, 255))
+        super().__init__(config.BOW_PROJECTILE_DAMAGE, direction,
+                         config.BOW_PROJECTILE_SPEED, owner)
 
 
 class RangedWeapon(Weapon, abc.ABC):
@@ -83,16 +85,26 @@ class RangedWeapon(Weapon, abc.ABC):
         pass
 
 
-    def __init__(self, owner, price, damage, size, speed):
+    def __init__(self, owner, price, damage, size, speed, cooldown):
+        self.projectiles = []
+        self.cooldown = cooldown
+        self.last_shoot = -1
         super().__init__(owner, price, damage, size, speed)
 
 
     #shoot
     def use(self, direction):
         if not self.owner.is_using_item:
-           return 0
-        self.owner.is_using_item = False
-        self.projectiles.append(self.get_new_projectile(direction))
+            return 0
+        if self.owner.is_friendly:
+            self.owner.is_using_item = False
+
+        if self.last_shoot == -1:
+            self.last_shoot = pygame.time.get_ticks()
+        elif pygame.time.get_ticks() - self.last_shoot < self.cooldown:
+            return 0
+        self.owner.projectiles.append(self.get_new_projectile(direction))
+        self.last_shoot = pygame.time.get_ticks()
         return 0
         
 
@@ -102,12 +114,14 @@ class Bow(RangedWeapon):
         pygame.Surface.set_colorkey(self.image, (255, 255, 255))
 
         price = -1 if 'bow' in config.STARTING_ITEMS else config.SHOP_ITEMS['bow']
-        super().__init__(owner, price, config.BOW_PROJECTILE_DAMAGE, config.BOW_PROJECTILE_SIZE, config.BOW_PROJECTILE_SPEED)
+        super().__init__(owner, price, config.BOW_PROJECTILE_DAMAGE, config.BOW_SIZE,
+                         config.BOW_PROJECTILE_SPEED, config.BOW_COOLDOWN)
 
 
     def get_new_projectile(self, direction):
-        direction_vector = tuple(a - b for a, b in zip(direction, self.owner.rect.center))
-        return BowProjectile(self.owner.is_friendly, direction_vector)
+        start = self.owner.rect.center
+        direction_vector = (direction[0] - start[0], direction[1] - start[1])
+        return BowProjectile(direction_vector, self.owner)
 
 
 class Dagger(MeleeWeapon):
