@@ -20,6 +20,14 @@ def handle_mouse_input(event, current_status, objects):
     #close shop button pressed in shop
     elif current_status is utils.Status.in_shop and objects['close_shop'].collidepoint(event.pos):
         return utils.Status.resuming
+    #quit button is pressed in the death screen
+    elif current_status is utils.Status.dead and objects['death_quit'].collidepoint(event.pos):
+        pygame.quit()
+        exit()
+    #quit button is pressed in the death screen
+    elif current_status is utils.Status.dead and objects['death_new_game'].collidepoint(event.pos):
+        return utils.Status.new_game
+    
     return current_status
 
 def handle_keyboard_input(event, current_status, objects):
@@ -40,6 +48,10 @@ def handle_keyboard_input(event, current_status, objects):
         current_status = utils.Status.in_shop
     elif event.key == pygame.K_o and current_status is utils.Status.in_shop:
         current_status = utils.Status.resuming
+    elif event.key == pygame.K_i and current_status is utils.Status.in_game:
+        current_status = utils.Status.dead
+    elif event.key == pygame.K_i and current_status is utils.Status.dead:
+        current_status = utils.Status.in_game
     #^^REMOVE LATER
         
     return current_status

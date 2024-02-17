@@ -3,32 +3,21 @@ import config
 import abc
 
 class Item(pygame.sprite.Sprite):
-    def __init__(self, price):
+    def __init__(self, price, owner, size):
         super().__init__()
         self.price = price
-
-
-class Weapon(Item, abc.ABC):
-    @abc.abstractmethod
-    def attack(self):
-        pass
-
-
-    def __init__(self, owner, price, damage, size, speed):
-        super().__init__(price)
-
-        self.damage = damage
-        self.size = size
-        self.speed = speed
-
         self.owner = owner
         self.coords = self.owner.coords
-        
+        self.size = size
         self.image = pygame.transform.scale(self.image, self.size)
         self.rect = self.image.get_rect(midleft = self.owner.rect.center)
         self._original_image = self.image.copy()
 
 
+    def use_item(self):
+        self.owner.is_using_item = True
+
+    
     @property
     def width(self):
         return abs(self.rect.right - self.rect.left)
@@ -37,10 +26,13 @@ class Weapon(Item, abc.ABC):
     @property
     def height(self):
         return abs(self.rect.top - self.rect.bottom)
-    
 
-    def use_item(self):
-        self.owner.is_using_item = True
+
+class Weapon(Item, abc.ABC):
+    def __init__(self, owner, price, damage, size, speed):
+        super().__init__(price, owner, size)
+        self.damage = damage
+        self.speed = speed
 
 
 class MeleeWeapon(Weapon, abc.ABC):
@@ -49,8 +41,9 @@ class MeleeWeapon(Weapon, abc.ABC):
         self.attack_progress = 1
         self.span = span
 
+
     #slash
-    def use(self):
+    def use(self, direction):
         if not self.owner.is_using_item:
            return 0
         
@@ -92,16 +85,14 @@ class RangedWeapon(Weapon, abc.ABC):
 
     def __init__(self, owner, price, damage, size, speed):
         super().__init__(owner, price, damage, size, speed)
-        
+
+
     #shoot
-    def use(self):
+    def use(self, direction):
         if not self.owner.is_using_item:
            return 0
         self.owner.is_using_item = False
-        new_projectile = self.get_new_projectile()
-        #
-        #
-        #
+        self.projectiles.append(self.get_new_projectile(direction))
         return 0
         
 
@@ -114,8 +105,8 @@ class Bow(RangedWeapon):
         super().__init__(owner, price, config.BOW_PROJECTILE_DAMAGE, config.BOW_PROJECTILE_SIZE, config.BOW_PROJECTILE_SPEED)
 
 
-    def get_new_projectile(self):
-        direction_vector = tuple(a - b for a, b in zip(pygame.mouse.get_pos(), self.owner.rect.center))
+    def get_new_projectile(self, direction):
+        direction_vector = tuple(a - b for a, b in zip(direction, self.owner.rect.center))
         return BowProjectile(self.owner.is_friendly, direction_vector)
 
 

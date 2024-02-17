@@ -11,23 +11,22 @@ class Status(Enum):
      resuming = 3
      paused = 4
      in_shop = 5
+     dead = 6
+     new_game = 7
 
 def init_starting_items(hero):
     for item_name in config.STARTING_ITEMS:
-        if item_name is 'dagger':
+        item = None
+        if item_name == 'dagger':
             item = weapons.Dagger(hero)
         if not item:
             continue
-        item_group = pygame.sprite.GroupSingle()
-        item_group.add(item)
-        hero.items.append(item_group)
+        hero.items.append(item)
 
 def init_hero():
-    hero_group = pygame.sprite.GroupSingle()
     hero = entities.GreasyKiller((config.SCREEN_WIDTH / 2, config.SCREEN_HEIGHT / 2))
     init_starting_items(hero)
-    hero_group.add(hero)
-    return hero_group
+    return hero
 
 def init_screen():
     screen = pygame.display.set_mode((config.SCREEN_WIDTH, config.SCREEN_HEIGHT), pygame.FULLSCREEN | pygame.SCALED)
@@ -35,10 +34,10 @@ def init_screen():
     pygame.display.set_icon(pygame.image.load(config.GAME_ICON).convert_alpha())
     return screen
 
-def render_multi_line(screen, text, x, y, font_size):
+def render_multi_line(screen, text, x, y, font_size, color):
     lines = text.splitlines()
     for i, line in enumerate(lines):
-        current_line = config.TEXT_FONT.render(line, True, config.MAIN_MENU_TEXT_COLOR) 
+        current_line = config.TEXT_FONT.render(line, True, color) 
         screen.blit(current_line, (x, y + font_size*i))
 
 def rotate_around_point(target, reference, angle):
@@ -60,8 +59,8 @@ def rotate(target_sprite, point1, point2, additional_angle):
     target_sprite.image = pygame.transform.rotate(target_sprite._original_image, int(angle))
     target_sprite.rect = target_sprite.image.get_rect(center = target_sprite.coords)
 
-def translate(sprite, from_point, vector_start, vector_end, pixel_count):
-    '''Translate sprite in the direction of vector by pixel_count'''
+def translate(point, vector_start, vector_end, pixel_count):
+    '''Translate point in the direction of vector by pixel_count'''
     dir_x = vector_end[0] - vector_start[0]
     dir_y = vector_end[1] - vector_start[1]
 
@@ -74,19 +73,19 @@ def translate(sprite, from_point, vector_start, vector_end, pixel_count):
     dir_x *= pixel_count
     dir_y *= pixel_count
 
-    #update coords
-    sprite.coords = (from_point[0] + dir_x, from_point[1] + dir_y)
+    #return translated point
+    return (point[0] + dir_x, point[1] + dir_y)
 
 def get_mov_vector(keys):
     mov_vector = [0, 0]
 
     if keys[pygame.K_a]:
-        mov_vector[0] -= config.HERO_MOVEMENT_SPEED
+        mov_vector[0] -= config.GREASY_KILLER_MOVEMENT_SPEED
     if keys[pygame.K_d]:
-        mov_vector[0] += config.HERO_MOVEMENT_SPEED
+        mov_vector[0] += config.GREASY_KILLER_MOVEMENT_SPEED
     if keys[pygame.K_w]:
-        mov_vector[1] -= config.HERO_MOVEMENT_SPEED
+        mov_vector[1] -= config.GREASY_KILLER_MOVEMENT_SPEED
     if keys[pygame.K_s]:
-        mov_vector[1] += config.HERO_MOVEMENT_SPEED
+        mov_vector[1] += config.GREASY_KILLER_MOVEMENT_SPEED
 
     return mov_vector
