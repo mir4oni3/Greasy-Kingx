@@ -127,6 +127,23 @@ def show_shop(screen, objects):
     show_shop_items(screen, config.SHOP_ITEMS, objects['hero'].items)
 
 
+def show_enemy_healthbars(screen, current_enemies):
+     #show enemy healthbars
+    hb_width = 0.1 * config.SCREEN_WIDTH
+    hb_height = 0.01 * config.SCREEN_HEIGHT
+    hb_color = config.HEALTHBAR_BG_COLOR
+    hb_color1 = config.HEALTHBAR_COLOR
+    radius = config.HEALTHBAR_BORDER_RADIUS
+
+    for enemy in current_enemies:
+        healthbar = pygame.Surface((hb_width, hb_height))
+        coords = utils.translate(enemy.coords, (0, 0), (0, -1), config.ENTITY_SIZE[1] // 2)
+        hb_rect = healthbar.get_rect(center = coords)
+        pygame.draw.rect(screen, hb_color, hb_rect, border_radius = radius)
+        cur_health = pygame.Surface((hb_width * (max(0, enemy.health) / enemy.max_health), hb_height))
+        pygame.draw.rect(screen, hb_color1, cur_health.get_rect(midleft = hb_rect.midleft), border_radius = radius)
+
+
 def show_ingame_UI(screen, hero, current_wave, current_enemies, score):
     #show health bar
     show_rect(screen, config.HEALTHBAR_WIDTH, config.HEALTHBAR_HEIGHT, (0.01, 0.01),
@@ -144,22 +161,9 @@ def show_ingame_UI(screen, hero, current_wave, current_enemies, score):
     quick_item_bg = show_rect(screen, config.QUICK_ITEMS_WIDTH, config.QUICK_ITEMS_HEIGHT, (0.234, ycoord),
                               config.QUICK_ITEMS_COLOR, config.QUICK_ITEMS_BORDER_RADIUS)
     
-    #show current hero items
-    show_quick_items(screen, hero.items, quick_item_bg)
-    hb_width = 0.1 * config.SCREEN_WIDTH
-    hb_height = 0.01 * config.SCREEN_HEIGHT
+    utils.show_items(screen, quick_item_bg, hero.items)
 
-    #show enemy healthbars
-    hb_color = config.HEALTHBAR_BG_COLOR
-    hb_color1 = config.HEALTHBAR_COLOR
-    radius = config.HEALTHBAR_BORDER_RADIUS
-    for enemy in current_enemies:
-        healthbar = pygame.Surface((hb_width, hb_height))
-        coords = utils.translate(enemy.coords, (0, 0), (0, -1), config.ENTITY_SIZE[1] // 2)
-        hb_rect = healthbar.get_rect(center = coords)
-        pygame.draw.rect(screen, hb_color, hb_rect, border_radius = radius)
-        cur_health = pygame.Surface((hb_width * (max(0, enemy.health) / enemy.max_health), hb_height))
-        pygame.draw.rect(screen, hb_color1, cur_health.get_rect(midleft = hb_rect.midleft), border_radius = radius)
+    show_enemy_healthbars(screen, current_enemies)
 
 
 def show_basic_text(screen, objects, note, button_text_1, button_text_2, theme):

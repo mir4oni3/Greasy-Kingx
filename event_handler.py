@@ -48,7 +48,8 @@ def handle_keyboard_input(event, current_status, objects):
         current_status = utils.Status.resuming
     elif event.key == pygame.K_SPACE and current_status is utils.Status.in_game:
         objects['hero'].use_item()
-
+    elif event.key >= pygame.K_0 and event.key <= pygame.K_9 and current_status is utils.Status.in_game:
+        objects['hero'].select_item(event.key - pygame.K_0 - 1)
     #FOR TESTING
     elif event.key == pygame.K_o and current_status is utils.Status.in_game:
         current_status = utils.Status.in_shop

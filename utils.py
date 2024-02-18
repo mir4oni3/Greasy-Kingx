@@ -96,6 +96,45 @@ def get_mov_vector(keys):
 
     return mov_vector
 
+def get_shop_icon(item):
+    path = None
+    match type(item):
+        case items.HealingPotion:
+            path = config.POTION_SHOP_ICON
+        case items.Dagger:
+            path = config.DAGGER_SHOP_ICON    
+        case items.Bow:
+            path = config.BOW_SHOP_ICON 
+
+    if not path:
+        return None
+    
+    image = pygame.image.load(path).convert_alpha()
+    image = pygame.transform.scale(image, config.SHOP_ICON_SIZE)
+
+    return image
+
+def show_items(screen, target_rect, item_list):
+    items_per_row = config.ITEMS_PER_ROW
+    xoffset = (target_rect.width - items_per_row * config.SHOP_ICON_SIZE[0]) // (items_per_row + 1)
+    yoffset = 20
+
+    coords = (target_rect.left + xoffset, target_rect.top + yoffset)
+    for i, item in enumerate(item_list, 1):
+        image = get_shop_icon(item)
+        rect = image.get_rect(topleft = coords)
+        if rect.right + xoffset > target_rect.right:
+            coords = (target_rect.left + xoffset, coords[1] + config.SHOP_ICON_SIZE[1] + yoffset)
+            rect = image.get_rect(topleft = coords)
+        if rect.bottom + yoffset > target_rect.bottom:
+            return
+        screen.blit(image, rect)
+
+        key = config.TEXT_FONT.render(str(i), True, config.SHOP_TEXT_COLOR)
+        screen.blit(key, (coords[0], coords[1] + config.SHOP_ICON_SIZE[1] + 5))
+
+        coords = (coords[0] + config.SHOP_ICON_SIZE[0] + xoffset, coords[1])
+
 def generate_coords():
      #generate the topleft coordinates of a new monster
     match random.randint(1, 4):
@@ -109,6 +148,6 @@ def generate_coords():
         case 4: #bottom wall
             coords = (random.randint(0, config.SCREEN_WIDTH - int(config.ENTITY_SIZE[0])),
                       config.SCREEN_HEIGHT - int(config.ENTITY_SIZE[1]))
-    
+
     #transform topleft coordinates into center coordinates
     return (coords[0] + config.ENTITY_SIZE[0] // 2, coords[1] + config.ENTITY_SIZE[1] // 2)

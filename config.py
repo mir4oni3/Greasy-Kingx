@@ -35,6 +35,7 @@ FROSTWIND_MARKSMAN_GOLD = 20
 
 #dagger
 DAGGER_ICON = 'Greasy Kingx/resource/Dagger.PNG'
+DAGGER_SHOP_ICON = 'Greasy Kingx/resource/DaggerShop.PNG'
 DAGGER_SIZE = (0.104 * SCREEN_WIDTH, 0.018 * SCREEN_HEIGHT)
 DAGGER_SPAN = 90
 DAGGER_SPEED = 2
@@ -42,6 +43,7 @@ DAGGER_DAMAGE = 25
 
 #bow
 BOW_ICON = 'Greasy Kingx/resource/Bow.PNG'
+BOW_SHOP_ICON = 'Greasy Kingx/resource/BowShop.PNG'
 BOW_SIZE = (0.028 * SCREEN_WIDTH, 0.092 * SCREEN_HEIGHT)
 BOW_COOLDOWN = 1000 #milliseconds
 BOW_PROJECTILE_SPEED = 5
@@ -52,6 +54,7 @@ ENEMY_BOW_PROJECTILE_ICON = 'Greasy Kingx/resource/BowProjectileEnemy.PNG'
 
 #healing potion
 POTION_ICON = 'Greasy Kingx/resource/HealingPotion.PNG'
+POTION_SHOP_ICON = 'Greasy Kingx/resource/HealingPotionShop.PNG'
 POTION_SIZE = (0.052 * SCREEN_WIDTH, 0.092 * SCREEN_HEIGHT)
 POTION_HEAL_AMOUNT = GREASY_KILLER_HEALTH * 0.33
 
@@ -64,9 +67,9 @@ GAME_TUTORIAL = 'How to play:\n\nW,A,S,D - Movement\n\nMouse Click\Spacebar - Sh
 SCORE_COLOR = (255, 148, 160)
 
 #quick item list
-QUICK_ITEMS_WIDTH = 0.532 * SCREEN_WIDTH
-QUICK_ITEMS_HEIGHT = 0.093 * SCREEN_HEIGHT
-QUICK_ITEMS_COLOR = (187, 220, 240)
+QUICK_ITEMS_WIDTH = 0.6 * SCREEN_WIDTH
+QUICK_ITEMS_HEIGHT = 0.150 * SCREEN_HEIGHT
+QUICK_ITEMS_COLOR = (255, 138, 138)
 QUICK_ITEMS_BORDER_RADIUS = 15
 
 #health bar
@@ -97,6 +100,8 @@ SHOP_BORDER_RADIUS = 40
 SHOP_BUTTON_COLOR = (30, 34, 115)
 SHOP_BUTTON_BORDER_RADIUS = 10
 SHOP_TEXT_COLOR = (255, 255, 255)
+SHOP_ICON_SIZE = (100, 100)
+ITEMS_PER_ROW = 10
 
 #basic screen
 BASIC_SCREEN_WIDTH = 0.5 * SCREEN_WIDTH
@@ -115,7 +120,7 @@ BASIC_SCREEN_BUTTON_COLOR2 = (30, 34, 115)
 BASIC_SCREEN_BUTTON_TEXT_COLOR2 = (255, 255, 255)
 
 #items
-STARTING_ITEMS = ['dagger']
+STARTING_ITEMS = ['dagger', 'bow', 'potion']
 
 SHOP_ITEMS = {'dagger' : 10, 'bow' : 300, 'healing_potion' : 50} #item : price
 

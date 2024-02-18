@@ -6,7 +6,7 @@ import random
 import entities
 import items
 
-def fix_wave(hero, current_wave, remaining_enemies, current_enemies, current_status, timer):
+def setup_wave(hero, current_wave, remaining_enemies, current_enemies, current_status, timer):
     if not remaining_enemies and not current_enemies:
         current_wave = min(current_wave + 1, config.MAX_WAVE)
         remaining_enemies = config.WAVE_ENEMIES[current_wave].copy()
@@ -108,10 +108,11 @@ def manage_collisions(hero, current_enemies):
 
 def process_game_iteration(hero, screen, current_status, current_wave,
                            remaining_enemies, current_enemies, timer):
+    
     UI.show_ingame_UI(screen, hero, current_wave, current_enemies, timer // 10)
 
-    temp_result = fix_wave(hero, current_wave, remaining_enemies,
-                           current_enemies, current_status, timer)
+    temp_result = setup_wave(hero, current_wave, remaining_enemies,
+                             current_enemies, current_status, timer)
     current_wave, remaining_enemies, current_enemies, current_status = temp_result
     
     manage_enemy_actions(current_enemies, hero, screen)
