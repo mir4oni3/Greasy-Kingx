@@ -6,13 +6,15 @@ import random
 import entities
 import items
 
-def fix_wave(current_wave, remaining_enemies, current_enemies, current_status, timer):
+def fix_wave(hero, current_wave, remaining_enemies, current_enemies, current_status, timer):
     if not remaining_enemies and not current_enemies:
         current_wave = min(current_wave + 1, config.MAX_WAVE)
         remaining_enemies = config.WAVE_ENEMIES[current_wave].copy()
         current_enemies = []
         random.shuffle(remaining_enemies)
-        current_status = utils.Status.shop_request if current_wave > 1 else current_status
+        if current_wave > 1:
+             current_status = utils.Status.shop_request
+             hero.balance += config.GOLD_ON_WAVE_COMPLETION
 
     if remaining_enemies and timer % (config.FRAMERATE * config.ENEMY_SPAWN_RATE) == 0:
         new_enemy = entities.entity_factory(remaining_enemies[0])
@@ -54,6 +56,7 @@ def manage_hero_actions(screen, hero):
 def manage_body_colision(hero, enemy, current_enemies):
     if pygame.Rect.colliderect(hero.rect, enemy.rect):
             hero.health -= enemy.body_damage
+            hero.balance += enemy.gold
             current_enemies.remove(enemy)
             if hero.health <= 0:
                 return True
@@ -71,6 +74,7 @@ def manage_melee_colision(attacker, target, current_enemies):
                 target.health -= attacker.active_item.damage
                 attacker.active_item.hit = True
             if target.health <= 0 and not target.is_friendly:
+                attacker.balance += target.gold
                 current_enemies.remove(target)
             if target.health <= 0 and target.is_friendly:
                 return True
@@ -85,6 +89,7 @@ def manage_projectile_colision(attacker, targets):
                 if current_target.health <= 0 and current_target.is_friendly:
                     return True
                 if current_target.health <= 0 and not current_target.is_friendly:
+                    attacker.balance += current_target.gold
                     targets.remove(current_target)
     return False
 
@@ -105,7 +110,8 @@ def process_game_iteration(hero, screen, current_status, current_wave,
                            remaining_enemies, current_enemies, timer):
     UI.show_ingame_UI(screen, hero, current_wave, current_enemies, timer // 10)
 
-    temp_result = fix_wave(current_wave, remaining_enemies, current_enemies, current_status, timer)
+    temp_result = fix_wave(hero, current_wave, remaining_enemies,
+                           current_enemies, current_status, timer)
     current_wave, remaining_enemies, current_enemies, current_status = temp_result
     
     manage_enemy_actions(current_enemies, hero, screen)

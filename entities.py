@@ -20,6 +20,7 @@ class Entity(pygame.sprite.Sprite):
         if not is_friendly:
             self.active_item = items.weapon_factory(self, weapon_code)
 
+
     def move(self, movement_vector):
         #move
         self.rect.left += movement_vector[0]
@@ -66,10 +67,12 @@ class GreasyKiller(Entity):
         self.current_item = 0
         self.balance = 0
 
+
     @property
     def active_item(self):
         return self.items[self.current_item]
     
+
     def use_item(self):
         self.active_item.use_item()
 
@@ -88,9 +91,11 @@ class GreasyKiller(Entity):
 
 
 class Monster(Entity):
-    def __init__(self, coords, movement_speed, weapon_code, body_damage, health):
+    def __init__(self, coords, movement_speed, weapon_code, body_damage, health, gold):
         super().__init__(coords, False, weapon_code, movement_speed, health)
         self.body_damage = body_damage
+        self.gold = gold
+
 
     def move(self, target_point):
         mov_vector_end = utils.translate(self.coords, self.coords, target_point, self.movement_speed)
@@ -105,7 +110,9 @@ class SlickbackScoundrel(Monster):
         speed = config.SLICKBACK_SCOUNDREL_MOVEMENT_SPEED
         damage = config.SLICKBACK_SCOUNDREL_BODY_DAMAGE
         health = config.SLICKBACK_SCOUNDREL_HEALTH
-        super().__init__(coords, speed, None, damage, health)
+        gold = config.DAGGER_MASTER_GOLD
+        super().__init__(coords, speed, None, damage, health, gold)
+
 
 #entity_code = 2
 class DaggerMaster(Monster):
@@ -114,7 +121,9 @@ class DaggerMaster(Monster):
         speed = config.DAGGER_MASTER_MOVEMENT_SPEED
         damage = config.DAGGER_MASTER_BODY_DAMAGE
         health = config.DAGGER_MASTER_HEALTH
-        super().__init__(coords, speed, 1, damage, health)
+        gold = config.DAGGER_MASTER_GOLD
+        super().__init__(coords, speed, 1, damage, health, gold)
+
 
 #entity_code = 3
 class FrostwindMarksman(Monster):
@@ -123,25 +132,12 @@ class FrostwindMarksman(Monster):
         speed = config.FROSTWIND_MARKSMAN_MOVEMENT_SPEED
         damage = config.FROSTWIND_MARKSMAN_BODY_DAMAGE
         health = config.FROSTWIND_MARKSMAN_HEALTH
-        super().__init__(coords, speed, 2, damage, health)
+        gold = config.FROSTWIND_MARKSMAN_GOLD
+        super().__init__(coords, speed, 2, damage, health, gold)
+
 
 def entity_factory(code):
-    #generate the topleft coordinates of the new monster
-    match random.randint(1, 4):
-        case 1: #left wall
-            coords = (0, random.randint(0, config.SCREEN_HEIGHT - int(config.ENTITY_SIZE[1])))
-        case 2: #top wall
-            coords = (random.randint(0, config.SCREEN_WIDTH - int(config.ENTITY_SIZE[0])), 0)
-        case 3: #right wall
-            coords = (config.SCREEN_WIDTH - int(config.ENTITY_SIZE[0]),
-                      random.randint(0, config.SCREEN_HEIGHT - int(config.ENTITY_SIZE[1])))
-        case 4: #bottom wall
-            coords = (random.randint(0, config.SCREEN_WIDTH - int(config.ENTITY_SIZE[0])),
-                      config.SCREEN_HEIGHT - int(config.ENTITY_SIZE[1]))
-    
-    #transform topleft coordinates into center coordinates
-    coords = (coords[0] + config.ENTITY_SIZE[0] // 2, coords[1] + config.ENTITY_SIZE[1] // 2)
-
+    coords = utils.generate_coords()
     #spawn enemy with the given code at the generated coordinates
     match code:
         case 1:

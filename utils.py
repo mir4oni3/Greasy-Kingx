@@ -3,6 +3,7 @@ import entities
 import config
 import items
 import math
+import random
 from enum import Enum
 
 class Status(Enum):
@@ -94,3 +95,20 @@ def get_mov_vector(keys):
         mov_vector[1] += config.GREASY_KILLER_MOVEMENT_SPEED
 
     return mov_vector
+
+def generate_coords():
+     #generate the topleft coordinates of a new monster
+    match random.randint(1, 4):
+        case 1: #left wall
+            coords = (0, random.randint(0, config.SCREEN_HEIGHT - int(config.ENTITY_SIZE[1])))
+        case 2: #top wall
+            coords = (random.randint(0, config.SCREEN_WIDTH - int(config.ENTITY_SIZE[0])), 0)
+        case 3: #right wall
+            coords = (config.SCREEN_WIDTH - int(config.ENTITY_SIZE[0]),
+                      random.randint(0, config.SCREEN_HEIGHT - int(config.ENTITY_SIZE[1])))
+        case 4: #bottom wall
+            coords = (random.randint(0, config.SCREEN_WIDTH - int(config.ENTITY_SIZE[0])),
+                      config.SCREEN_HEIGHT - int(config.ENTITY_SIZE[1]))
+    
+    #transform topleft coordinates into center coordinates
+    return (coords[0] + config.ENTITY_SIZE[0] // 2, coords[1] + config.ENTITY_SIZE[1] // 2)

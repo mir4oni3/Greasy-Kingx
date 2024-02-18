@@ -162,7 +162,6 @@ def show_ingame_UI(screen, hero, current_wave, current_enemies, score):
         pygame.draw.rect(screen, hb_color1, cur_health.get_rect(midleft = hb_rect.midleft), border_radius = radius)
 
 
-
 def show_basic_text(screen, objects, note, button_text_1, button_text_2, theme):
     if theme == 1:
         text_color = config.BASIC_SCREEN_TEXT_COLOR1
