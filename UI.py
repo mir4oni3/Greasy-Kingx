@@ -127,7 +127,7 @@ def show_shop(screen, objects):
     show_shop_items(screen, config.SHOP_ITEMS, objects['hero'].items)
 
 
-def show_ingame_UI(screen, hero, current_wave, score):
+def show_ingame_UI(screen, hero, current_wave, current_enemies, score):
     #show health bar
     show_rect(screen, config.HEALTHBAR_WIDTH, config.HEALTHBAR_HEIGHT, (0.01, 0.01),
               config.HEALTHBAR_BG_COLOR, config.HEALTHBAR_BORDER_RADIUS)
@@ -146,6 +146,22 @@ def show_ingame_UI(screen, hero, current_wave, score):
     
     #show current hero items
     show_quick_items(screen, hero.items, quick_item_bg)
+    hb_width = 0.1 * config.SCREEN_WIDTH
+    hb_height = 0.01 * config.SCREEN_HEIGHT
+
+    #show enemy healthbars
+    hb_color = config.HEALTHBAR_BG_COLOR
+    hb_color1 = config.HEALTHBAR_COLOR
+    radius = config.HEALTHBAR_BORDER_RADIUS
+    for enemy in current_enemies:
+        healthbar = pygame.Surface((hb_width, hb_height))
+        coords = utils.translate(enemy.coords, (0, 0), (0, -1), config.ENTITY_SIZE[1] // 2)
+        hb_rect = healthbar.get_rect(center = coords)
+        pygame.draw.rect(screen, hb_color, hb_rect, border_radius = radius)
+        cur_health = pygame.Surface((hb_width * (max(0, enemy.health) / enemy.max_health), hb_height))
+        pygame.draw.rect(screen, hb_color1, cur_health.get_rect(midleft = hb_rect.midleft), border_radius = radius)
+
+
 
 def show_basic_text(screen, objects, note, button_text_1, button_text_2, theme):
     if theme == 1:

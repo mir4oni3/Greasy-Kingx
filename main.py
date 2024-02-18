@@ -15,7 +15,6 @@ background = pygame.Surface((config.SCREEN_WIDTH, config.SCREEN_HEIGHT))
 current_wave = 0
 remaining_enemies = []
 current_enemies = []
-spawn_time = {}
 objects = {'hero' : hero}
 current_status = Status.in_menu
 timer = 0
@@ -33,9 +32,9 @@ while True: #game loop
     elif current_status in (Status.in_game, Status.resuming):
         screen.blit(background, (0, 0))
         result = iteration.process_game_iteration(hero, screen, current_status, current_wave,
-                                                  remaining_enemies, current_enemies, timer, spawn_time)
+                                                  remaining_enemies, current_enemies, timer)
         current_status, current_wave, remaining_enemies, current_enemies, timer = result
-        UI.show_ingame_UI(screen, hero, current_wave, timer // 10)
+        UI.show_ingame_UI(screen, hero, current_wave, current_enemies, timer // 10)
     
     elif current_status is Status.shop_request:
         UI.show_basic_screen(screen, objects, 'Open Shop ?', 'Yes', 'Next Wave', 2)

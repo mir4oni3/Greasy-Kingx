@@ -2,9 +2,10 @@ import pygame
 import config
 import utils
 import random
+import items
 
 class Entity(pygame.sprite.Sprite):
-    def __init__(self, coords, is_friendly, movement_speed, health):
+    def __init__(self, coords, is_friendly, weapon_code, movement_speed, health):
         super().__init__()
         self.image = pygame.transform.scale(self.image, config.ENTITY_SIZE)
         self.rect = self.image.get_rect(center = coords)
@@ -16,6 +17,8 @@ class Entity(pygame.sprite.Sprite):
         self.health = health
         self.max_health = health
         self.projectiles = []
+        if not is_friendly:
+            self.active_item = items.weapon_factory(self, weapon_code)
 
     def move(self, movement_vector):
         #move
@@ -58,7 +61,7 @@ class GreasyKiller(Entity):
         self.image = pygame.image.load(config.GREASY_KILLER_ICON).convert_alpha()
         speed = config.GREASY_KILLER_MOVEMENT_SPEED
         health = config.GREASY_KILLER_HEALTH
-        super().__init__(coords, True, speed, health)
+        super().__init__(coords, True, None, speed, health)
         self.items = []
         self.current_item = 0
         self.balance = 0
@@ -85,10 +88,8 @@ class GreasyKiller(Entity):
 
 
 class Monster(Entity):
-    def __init__(self, coords, movement_speed, attack_speed, active_item, body_damage, health):
-        super().__init__(coords, False, movement_speed, health)
-        self.attack_speed = attack_speed
-        self.active_item = active_item
+    def __init__(self, coords, movement_speed, weapon_code, body_damage, health):
+        super().__init__(coords, False, weapon_code, movement_speed, health)
         self.body_damage = body_damage
 
     def move(self, target_point):
@@ -104,8 +105,25 @@ class SlickbackScoundrel(Monster):
         speed = config.SLICKBACK_SCOUNDREL_MOVEMENT_SPEED
         damage = config.SLICKBACK_SCOUNDREL_BODY_DAMAGE
         health = config.SLICKBACK_SCOUNDREL_HEALTH
-        super().__init__(coords, speed, 1, None, damage, health)
+        super().__init__(coords, speed, None, damage, health)
 
+#entity_code = 2
+class DaggerMaster(Monster):
+    def __init__(self, coords):
+        self.image = pygame.image.load(config.DAGGER_MASTER_ICON).convert_alpha()
+        speed = config.DAGGER_MASTER_MOVEMENT_SPEED
+        damage = config.DAGGER_MASTER_BODY_DAMAGE
+        health = config.DAGGER_MASTER_HEALTH
+        super().__init__(coords, speed, 1, damage, health)
+
+#entity_code = 3
+class FrostwindMarksman(Monster):
+    def __init__(self, coords):
+        self.image = pygame.image.load(config.FROSTWIND_MARKSMAN_ICON).convert_alpha()
+        speed = config.FROSTWIND_MARKSMAN_MOVEMENT_SPEED
+        damage = config.FROSTWIND_MARKSMAN_BODY_DAMAGE
+        health = config.FROSTWIND_MARKSMAN_HEALTH
+        super().__init__(coords, speed, 2, damage, health)
 
 def entity_factory(code):
     #generate the topleft coordinates of the new monster
@@ -128,3 +146,7 @@ def entity_factory(code):
     match code:
         case 1:
             return SlickbackScoundrel(coords)
+        case 2:
+            return DaggerMaster(coords)
+        case 3:
+            return FrostwindMarksman(coords)

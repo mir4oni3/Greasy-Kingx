@@ -1,7 +1,7 @@
 import pygame
 import entities
 import config
-import weapons
+import items
 import math
 from enum import Enum
 
@@ -19,9 +19,11 @@ def init_starting_items(hero):
     for item_name in config.STARTING_ITEMS:
         item = None
         if item_name == 'dagger':
-            item = weapons.Dagger(hero)
+            item = items.Dagger(hero)
         if item_name == 'bow':
-            item = weapons.Bow(hero)
+            item = items.Bow(hero)
+        if item_name == 'potion':
+            item = items.HealingPotion(hero)
         if not item:
             continue
         hero.items.append(item)

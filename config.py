@@ -18,7 +18,16 @@ SLICKBACK_SCOUNDREL_MOVEMENT_SPEED = 0.003 * SCREEN_WIDTH
 SLICKBACK_SCOUNDREL_BODY_DAMAGE = 30
 SLICKBACK_SCOUNDREL_HEALTH = 50
 
-#weapons
+DAGGER_MASTER_ICON = 'Greasy Kingx/DaggerMaster.PNG'
+DAGGER_MASTER_MOVEMENT_SPEED = 0.003 * SCREEN_WIDTH
+DAGGER_MASTER_BODY_DAMAGE = 30
+DAGGER_MASTER_HEALTH = 75
+
+FROSTWIND_MARKSMAN_ICON = 'Greasy Kingx/FrostwindMarksman.PNG'
+FROSTWIND_MARKSMAN_MOVEMENT_SPEED = 0.001 * SCREEN_WIDTH
+FROSTWIND_MARKSMAN_BODY_DAMAGE = 50
+FROSTWIND_MARKSMAN_HEALTH = 50
+#items
 
 #dagger
 DAGGER_ICON = 'Greasy Kingx/Dagger.PNG'
@@ -36,6 +45,11 @@ BOW_PROJECTILE_SIZE = (0.032 * SCREEN_WIDTH, 0.018 * SCREEN_HEIGHT)
 BOW_PROJECTILE_DAMAGE = 20
 BOW_PROJECTILE_ICON = 'Greasy Kingx/BowProjectile.PNG'
 ENEMY_BOW_PROJECTILE_ICON = 'Greasy Kingx/BowProjectileEnemy.PNG'
+
+#healing potion
+POTION_ICON = 'Greasy Kingx/HealingPotion.PNG'
+POTION_SIZE = (0.052 * SCREEN_WIDTH, 0.092 * SCREEN_HEIGHT)
+POTION_HEAL_AMOUNT = GREASY_KILLER_HEALTH * 0.33
 
 #text
 FONT_SIZE = SCREEN_WIDTH // 40
@@ -107,5 +121,5 @@ UPGRADES = {'dagger_size' : 30, 'dagger_speed' : 40, 'dagger_span' : 30, 'dagger
 
 #wave   {wave : list of codes for each enemy in wave} ( Note : codes are in entities.py )
 MAX_WAVE = 50
-WAVE_ENEMIES = {wave : [1] * wave for wave in range(1, MAX_WAVE + 1)}
+WAVE_ENEMIES = {wave : [3] * wave for wave in range(1, MAX_WAVE + 1)}
 ENEMY_SPAWN_RATE = 5 #one enemy spawns every 5 seconds
